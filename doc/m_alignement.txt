@@ -1,0 +1,24 @@
+--------------------------------------------------
+
+TYPE		| sizeof	| alignof
+  bool    	| 1		| 1
+  char    	| 1		| 1
+  int     	| 4		| 4
+  float   	| 4		| 4
+  double  	| 8		| 8
+
+TYPE		| sizeof	| alignof
+  6S_empt 	| 1		| 1
+  6S_bool 	| 1		| 1
+  5S_bbb  	| 3		| 1
+  6S_bbbb 	| 4		| 1
+
+TYPE		| sizeof	| alignof
+  5S_bdb  	| 24		| 8
+  5S_dbb  	| 16		| 8
+  5S_bbd  	| 16		| 8
+  6S_bbbd 	| 16		| 8
+  5S_b1d  	| 16		| 8
+  5S_b8d  	| 16		| 8
+  5S_b9d  	| 24		| 8
+--------------------------------------------------

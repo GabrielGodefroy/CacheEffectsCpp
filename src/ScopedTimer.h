@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <iostream>
 
 namespace cache
 {
@@ -49,7 +50,7 @@ namespace cache
 
     void ScopedTimer::print() const
     {
-        std::cout << message << "\t" << elapsed_ms() << " (ms)" << std::endl;
+        std::cout << message << elapsed_ms() << " (ms)" << std::endl;
     }
 
     ScopedTimer::~ScopedTimer()
