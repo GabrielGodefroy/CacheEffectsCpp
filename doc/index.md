@@ -34,7 +34,6 @@ template<typename T, typename... Args>  void show_sizes_and_alignments();
 void show_sizes_and_alignments(){};
 
 
-
 int main()
 {
     std::cout << std::string(50,'-') << std::endl;
@@ -130,3 +129,32 @@ for (std::size_t i = 0; i < 1024 * 1024; i++)
 
 
 ![The impact of cache lines on ](m_cache_lines.png)
+
+
+## L1, L2 and L3 caches
+
+```txt
+Architecture:          x86_64
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian
+CPU(s):                4
+On-line CPU(s) list:   0-3
+Thread(s) per core:    2
+Core(s) per socket:    2
+NUMA node(s):          1
+Vendor ID:             GenuineIntel
+Model name:            Intel(R) Core(TM) i7-4510U CPU @ 2.00GHz
+Stepping:              1
+Virtualization:        VT-x
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              256K
+L3 cache:              4096K
+```
+
+
+
+## Cache associativity
+
+![The impact of cache lines on cache associativity](m_cache_associativity.png)
+![The impact of cache lines on cache associativity](m_cache_associativity_zoom.png)

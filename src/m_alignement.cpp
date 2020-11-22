@@ -19,7 +19,6 @@ template<typename T, typename... Args>  void show_sizes_and_alignments();
 void show_sizes_and_alignments(){};
 
 
-
 int main()
 {
     std::cout << std::string(50,'-') << std::endl;
