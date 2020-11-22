@@ -45,9 +45,11 @@ m_l1_l2: build/m_l1_l2.txt build/m_l1_l2.exe
 	
 build/m_cache_lines.txt: build/m_cache_lines.exe
 	$(call exec_file,m_cache_lines)
-build/m_cache_lines.exe: src/m_cache_lines.cpp 
+build/m_cache_lines.exe: src/m_cache_lines.cpp src/f_cache_lines.hpp 
 	$(call compile_exe_file,m_cache_lines)
-m_cache_lines: build/m_cache_lines.txt build/m_cache_lines.exe
+doc/m_cache_lines.png: python/m_cache_lines.py build/m_cache_lines.txt
+	$(call run_python,m_cache_lines)
+m_cache_lines: build/m_cache_lines.txt build/m_cache_lines.exe doc/m_cache_lines.png
 		
 build/m_cache_associativity.txt: build/m_cache_associativity.exe
 	$(call exec_file,m_cache_associativity)
@@ -57,8 +59,7 @@ m_cache_associativity: build/m_cache_associativity.txt build/m_cache_associativi
 		
 
 
-py:
-	$(call run_python,m_cache_lines)
+py: doc/m_cache_lines.png
 
 webpage:
 	$(call run_python,replace)

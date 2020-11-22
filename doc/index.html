@@ -191,10 +191,22 @@ TYPE        | sizeof    | alignof
 </code></pre>
 <p>TODO m_alignement.svg</p>
 <h2 id="impact-of-cache-lines">Impact of cache lines</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">constexpr</span> <span class="bu">std::</span>size_t nb_elem = <span class="dv">513</span> * <span class="dv">1024</span> * <span class="dv">1024</span>;</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="bu">std::</span>vector&lt;<span class="dt">char</span>&gt; vec_char(nb_elem);</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="cf">for</span> (<span class="bu">std::</span>size_t i = <span class="dv">0</span>; i &lt; <span class="dv">1024</span> * <span class="dv">1024</span>; i++)</span>
-<span id="cb3-4"><a href="#cb3-4"></a>    vec[i * delta] += <span class="dv">1</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1"></a><span class="pp">#pragma once</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="pp">#include </span><span class="im">&lt;assert.h&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">namespace</span> cache</span>
+<span id="cb3-5"><a href="#cb3-5"></a>{</span>
+<span id="cb3-6"><a href="#cb3-6"></a>    <span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    <span class="dt">void</span> touche_every_step(</span>
+<span id="cb3-8"><a href="#cb3-8"></a>        <span class="bu">std::</span>vector&lt;T&gt;&amp; vecElem, </span>
+<span id="cb3-9"><a href="#cb3-9"></a>        <span class="bu">std::</span>size_t delta, </span>
+<span id="cb3-10"><a href="#cb3-10"></a>        <span class="bu">std::</span>size_t nb_touch)</span>
+<span id="cb3-11"><a href="#cb3-11"></a>    {  </span>
+<span id="cb3-12"><a href="#cb3-12"></a>        <span class="ot">assert</span>(nb_touch*delta &lt; vecElem.size());</span>
+<span id="cb3-13"><a href="#cb3-13"></a>        <span class="cf">for</span> (<span class="bu">std::</span>size_t i = <span class="dv">0</span>; i &lt; nb_touch; i++)</span>
+<span id="cb3-14"><a href="#cb3-14"></a>            vecElem[i * delta] += <span class="dv">1</span>;</span>
+<span id="cb3-15"><a href="#cb3-15"></a>    }</span>
+<span id="cb3-16"><a href="#cb3-16"></a>} <span class="co">// namespace cache</span></span></code></pre></div>
 <figure>
 <img src="m_cache_lines.png" alt="" /><figcaption>The impact of cache lines on</figcaption>
 </figure>

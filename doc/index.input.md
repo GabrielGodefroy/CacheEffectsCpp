@@ -26,10 +26,7 @@ TODO m_alignement.svg
 ## Impact of cache lines
 
 ```cpp
-constexpr std::size_t nb_elem = 513 * 1024 * 1024;
-std::vector<char> vec_char(nb_elem);
-for (std::size_t i = 0; i < 1024 * 1024; i++)
-    vec[i * delta] += 1;
+{{src/f_cache_lines.hpp}}
 ```
 
 
