@@ -25,8 +25,7 @@ def build_data_set_from_text(content):
     df["Array size"] = df["Array size"]/1024
     df = df.astype({"Array size": int})
     df = df.astype({"Array size": str})
-    #df["Array size"] = df["Array size"].str.cat("1024x")
-
+    
     return df
 
 

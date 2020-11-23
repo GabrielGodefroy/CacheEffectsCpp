@@ -1,4 +1,4 @@
-CPPFLAGS=-Wall -Werror -O3 -std=c++2a
+#CPPFLAGS=-Wall -Werror -O3 -std=c++2a
 CPPFLAGS=-Wall -Werror -DNDEBUG -O3 -std=c++2a
 PYTHONPATH=/home/godefroy/miniconda3/envs/CacheEffect/bin/python
 
@@ -39,8 +39,10 @@ m_alignement: build/m_alignement.txt build/m_alignement.exe
 
 build/m_l1_l2.txt: build/m_l1_l2.exe
 	$(call exec_file,m_l1_l2)
-build/m_l1_l2.exe: src/m_l1_l2.cpp 
-	$(call compile_exe_file,m_l1_l2)
+build/f_l1_l2.o: src/f_l1_l2.cpp src/f_l1_l2.h
+	$(call compile_obj_file,f_l1_l2)
+build/m_l1_l2.exe: build/f_l1_l2.o src/m_l1_l2.cpp 
+	$(call compile_exe_file,m_l1_l2, -I/src build/f_l1_l2.o)
 m_l1_l2: build/m_l1_l2.txt build/m_l1_l2.exe
 	
 build/m_cache_lines.txt: build/m_cache_lines.exe
@@ -56,6 +58,21 @@ build/m_cache_associativity.txt: build/m_cache_associativity.exe
 build/m_cache_associativity.exe: src/m_cache_associativity.cpp 
 	$(call compile_exe_file,m_cache_associativity)
 m_cache_associativity: build/m_cache_associativity.txt build/m_cache_associativity.exe
+		
+build/m_false_sharing.txt: build/m_false_sharing.exe
+	$(call exec_file,m_false_sharing)
+build/m_false_sharing.exe: src/m_false_sharing.cpp 
+	$(call compile_exe_file,m_false_sharing, -pthread)
+m_false_sharing: build/m_false_sharing.txt build/m_false_sharing.exe
+		
+		
+build/m_loop_vect.txt: build/m_loop_vect.exe
+	$(call exec_file,m_loop_vect)
+build/m_loop_vect.exe: build/f_loop_vect.o src/m_loop_vect.cpp 
+	$(call compile_exe_file,m_loop_vect, -I/src build/f_loop_vect.o)
+build/f_loop_vect.o: src/f_loop_vect.cpp src/f_loop_vect.h
+	$(call compile_obj_file,f_loop_vect)
+m_loop_vect: build/m_loop_vect.txt build/m_loop_vect.exe
 		
 
 
