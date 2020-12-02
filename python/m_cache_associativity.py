@@ -76,8 +76,8 @@ def plot_all(df, png_name):
 
 def main():
     input_file = "build/m_cache_associativity.txt"
-    output_img = "doc/m_cache_associativity.png"
-    output_zoom_img = "doc/m_cache_associativity_zoom.png"
+    output_img = "docs/m_cache_associativity.png"
+    output_zoom_img = "docs/m_cache_associativity_zoom.png"
 
     df = load_file_as_dataframe(input_file)
 

@@ -20,7 +20,7 @@ def build_data_set(content, types=["char", "short", "int", "double"]):
 
 def main():
     input_file = "build/m_cache_lines.txt"
-    output_img = "doc/m_cache_lines.png"
+    output_img = "docs/m_cache_lines.png"
 
     with open(input_file, "r") as result:
         content = result.read()

@@ -1,5 +1,6 @@
 import re
 import shutil
+import sys
 
 def text_file_as_string(filepath):
 	with open(filepath, 'r') as textfile:
@@ -10,8 +11,10 @@ def string_to_text_file(text, filepath):
 		textfile.write(text)
 
 def main():
-	input_file  = "doc/index.input.md"
-	output_file = "doc/index.md"
+	input_file  = sys.argv[1]
+	output_file = sys.argv[2]
+	input_file  = "docs/index.input.md"
+	output_file = "docs/index.md"
 
 	to_replace = re.findall(r"{{(.*)}}", text_file_as_string(input_file))
 	new_text = text_file_as_string(input_file)
@@ -21,5 +24,5 @@ def main():
 
 	string_to_text_file(new_text, output_file)
 
-
-main();
+if __name__=="__main__":
+    main()

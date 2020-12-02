@@ -21,11 +21,20 @@ endef
 
 # Typically used to convert results into an image
 define run_python 
-	${PYTHONPATH} python/$(1).py	
+	${PYTHONPATH} python/$(1).py $(2)	
+endef
+
+# Replace what needed to be in input.md file, and call pandoc
+define replace_and_pandoc 
+	$(call run_python,replace,  docs/$(1).input.md docs/$(1).md)
+	pandoc -c style.css -s docs/$(1).md -o docs/$(1).html
 endef
 
 
-all: compil exec python webpage
+all: build_and_run_all webpage
+
+build_and_run_all: m_loop_vect m_false_sharing m_cache_associativity m_cache_lines  m_l1_l2 m_alignement 
+
 
 .PHONY: clean
 clean:
@@ -83,10 +92,9 @@ m_loop_vect: build/m_loop_vect.txt build/m_loop_vect.exe
 
 
 py: docs/m_cache_lines.png
-
+ 
 webpage:
-	$(call run_python,replace)
-	pandoc -c style.css -s docs/index.md -o docs/index.html
+	$(call replace_and_pandoc,index)
 
     
         
