@@ -86,147 +86,54 @@
 <h1 class="title">A gallery C++ of cache effects</h1>
 <p class="author">Gabriel Godefroy</p>
 </header>
-<p>This repository is strongly inspired by:</p>
+<p>Hardware effects impact performances. This repository contains C++ codes illustrating some of these effects, as well as Python code to plot the results. You can fork this repository and try to reproduce the results, as these performance tests are hardware dependent.</p>
+<p>This repository, and all the contained examples, are strongly inspired by:</p>
 <ul>
 <li><a href="http://igoro.com/archive/gallery-of-processor-cache-effects/">“Gallery of Processor Cache Effects“, by Igor Ostrovsky</a></li>
 <li><a href="https://www.youtube.com/watch?v=BP6NxVxDQIs">“Want fast C++? Know your hardware!“, by Timur Doumler</a></li>
 </ul>
-<h2 id="on-memory-alignement-padding">On memory alignement (padding)</h2>
-<p>In C++, a variable can not be smaller that the size of a <code>char</code></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;typeinfo&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="pp">#include </span><span class="im">&lt;map&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co">/*! </span><span class="an">\brief</span><span class="co"> Display the size and the alignement of a given type */</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> show_size_and_alignment();</span>
-<span id="cb1-9"><a href="#cb1-9"></a></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">struct</span> S_dbb  { <span class="dt">double</span> b; <span class="dt">bool</span> a; <span class="dt">bool</span> c; };</span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="kw">struct</span> S_bdb  { <span class="dt">bool</span> a; <span class="dt">double</span> b; <span class="dt">bool</span> c; };</span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="kw">struct</span> S_b1d  { <span class="dt">bool</span> b1[<span class="dv">1</span>]; <span class="dt">double</span> b; };</span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="kw">struct</span> S_b8d  { <span class="dt">bool</span> b8[<span class="dv">8</span>]; <span class="dt">double</span> b; };</span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="kw">struct</span> S_b9d  { <span class="dt">bool</span> b9[<span class="dv">9</span>]; <span class="dt">double</span> b; };</span>
-<span id="cb1-15"><a href="#cb1-15"></a></span>
-<span id="cb1-16"><a href="#cb1-16"></a></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="dt">void</span> show_table_header();  </span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T, <span class="kw">typename</span>... Args&gt;  <span class="dt">void</span> show_sizes_and_alignments();</span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="dt">void</span> show_sizes_and_alignments(){};</span>
-<span id="cb1-20"><a href="#cb1-20"></a></span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="dt">int</span> main()</span>
-<span id="cb1-23"><a href="#cb1-23"></a>{</span>
-<span id="cb1-24"><a href="#cb1-24"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="bu">std::</span>string(<span class="dv">50</span>,<span class="ch">&#39;-&#39;</span>) &lt;&lt; <span class="bu">std::</span>endl;</span>
-<span id="cb1-25"><a href="#cb1-25"></a>    show_table_header();</span>
-<span id="cb1-26"><a href="#cb1-26"></a>    show_sizes_and_alignments&lt;<span class="dt">bool</span>, <span class="dt">char</span>, <span class="dt">short</span>, <span class="dt">int</span>, <span class="dt">float</span>, <span class="dt">double</span>&gt;();</span>
-<span id="cb1-27"><a href="#cb1-27"></a>    </span>
-<span id="cb1-28"><a href="#cb1-28"></a>    show_table_header();</span>
-<span id="cb1-29"><a href="#cb1-29"></a>    show_sizes_and_alignments&lt;S_bdb, S_dbb, S_b1d, S_b8d, S_b9d&gt;();</span>
-<span id="cb1-30"><a href="#cb1-30"></a>    </span>
-<span id="cb1-31"><a href="#cb1-31"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="bu">std::</span>string(<span class="dv">50</span>,<span class="ch">&#39;-&#39;</span>)&lt;&lt; <span class="bu">std::</span>endl;</span>
-<span id="cb1-32"><a href="#cb1-32"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
-<span id="cb1-33"><a href="#cb1-33"></a>}</span>
-<span id="cb1-34"><a href="#cb1-34"></a></span>
-<span id="cb1-35"><a href="#cb1-35"></a></span>
-<span id="cb1-36"><a href="#cb1-36"></a><span class="co">// Helper functions //</span></span>
-<span id="cb1-37"><a href="#cb1-37"></a></span>
-<span id="cb1-38"><a href="#cb1-38"></a><span class="at">const</span> <span class="dt">char</span>* sep = <span class="st">&quot;</span><span class="sc">\t</span><span class="st">| &quot;</span>;</span>
-<span id="cb1-39"><a href="#cb1-39"></a></span>
-<span id="cb1-40"><a href="#cb1-40"></a></span>
-<span id="cb1-41"><a href="#cb1-41"></a><span class="at">const</span> <span class="bu">std::</span>map&lt;<span class="bu">std::</span>string, <span class="bu">std::</span>string&gt; type_name = {</span>
-<span id="cb1-42"><a href="#cb1-42"></a>    {<span class="kw">typeid</span>(<span class="dt">double</span>).name(), <span class="st">&quot;double&quot;</span>},</span>
-<span id="cb1-43"><a href="#cb1-43"></a>    {<span class="kw">typeid</span>(<span class="dt">short</span>).name(), <span class="st">&quot;short&quot;</span>},</span>
-<span id="cb1-44"><a href="#cb1-44"></a>    {<span class="kw">typeid</span>(<span class="dt">float</span>).name(), <span class="st">&quot;float&quot;</span>},</span>
-<span id="cb1-45"><a href="#cb1-45"></a>    {<span class="kw">typeid</span>(<span class="dt">int</span>).name(), <span class="st">&quot;int&quot;</span>},</span>
-<span id="cb1-46"><a href="#cb1-46"></a>    {<span class="kw">typeid</span>(<span class="dt">char</span>).name(), <span class="st">&quot;char&quot;</span>},</span>
-<span id="cb1-47"><a href="#cb1-47"></a>    {<span class="kw">typeid</span>(<span class="dt">bool</span>).name(), <span class="st">&quot;bool&quot;</span>}};</span>
-<span id="cb1-48"><a href="#cb1-48"></a></span>
-<span id="cb1-49"><a href="#cb1-49"></a><span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;</span>
-<span id="cb1-50"><a href="#cb1-50"></a><span class="bu">std::</span>string get_typename() {</span>
-<span id="cb1-51"><a href="#cb1-51"></a>    <span class="at">const</span> <span class="bu">std::</span>string key{<span class="kw">typeid</span>(T).name()};</span>
-<span id="cb1-52"><a href="#cb1-52"></a>    <span class="kw">auto</span> it = type_name.find(key);</span>
-<span id="cb1-53"><a href="#cb1-53"></a>    <span class="cf">if</span>(it!=type_name.end()){</span>
-<span id="cb1-54"><a href="#cb1-54"></a>        <span class="cf">return</span> it-&gt;second;</span>
-<span id="cb1-55"><a href="#cb1-55"></a>    }</span>
-<span id="cb1-56"><a href="#cb1-56"></a>    <span class="cf">return</span> key;</span>
-<span id="cb1-57"><a href="#cb1-57"></a>} </span>
-<span id="cb1-58"><a href="#cb1-58"></a></span>
-<span id="cb1-59"><a href="#cb1-59"></a><span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;</span>
-<span id="cb1-60"><a href="#cb1-60"></a><span class="dt">void</span> show_size_and_alignment()</span>
-<span id="cb1-61"><a href="#cb1-61"></a>{</span>
-<span id="cb1-62"><a href="#cb1-62"></a>    <span class="at">const</span> <span class="dt">int</span> nb_white_space = <span class="bu">std::</span>max&lt;<span class="dt">int</span>&gt;(<span class="dv">0</span> ,<span class="dv">8</span>-get_typename&lt;T&gt;().size());</span>
-<span id="cb1-63"><a href="#cb1-63"></a>    <span class="at">const</span> <span class="bu">std::</span>string whitespaces(nb_white_space    , <span class="ch">&#39; &#39;</span>);</span>
-<span id="cb1-64"><a href="#cb1-64"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="st">&quot;  &quot;</span>&lt;&lt; get_typename&lt;T&gt;() &lt;&lt; whitespaces &lt;&lt; sep  &lt;&lt;<span class="kw">sizeof</span>(T) &lt;&lt; <span class="st">&quot; </span><span class="sc">\t</span><span class="st">&quot;</span> &lt;&lt;sep  &lt;&lt; <span class="kw">alignof</span>(T) &lt;&lt; <span class="bu">std::</span>endl;</span>
-<span id="cb1-65"><a href="#cb1-65"></a>}</span>
-<span id="cb1-66"><a href="#cb1-66"></a></span>
-<span id="cb1-67"><a href="#cb1-67"></a></span>
-<span id="cb1-68"><a href="#cb1-68"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> Arg, <span class="kw">typename</span>... Args&gt;  </span>
-<span id="cb1-69"><a href="#cb1-69"></a><span class="dt">void</span> show_sizes_and_alignments(){</span>
-<span id="cb1-70"><a href="#cb1-70"></a>    show_size_and_alignment&lt;Arg&gt;();</span>
-<span id="cb1-71"><a href="#cb1-71"></a>    (show_sizes_and_alignments&lt;Args&gt;(),...);</span>
-<span id="cb1-72"><a href="#cb1-72"></a>}</span>
-<span id="cb1-73"><a href="#cb1-73"></a></span>
-<span id="cb1-74"><a href="#cb1-74"></a></span>
-<span id="cb1-75"><a href="#cb1-75"></a><span class="dt">void</span> show_table_header()</span>
-<span id="cb1-76"><a href="#cb1-76"></a>{</span>
-<span id="cb1-77"><a href="#cb1-77"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="st">&quot;</span><span class="sc">\n</span><span class="st">TYPE</span><span class="sc">\t</span><span class="st">&quot;</span>  &lt;&lt; sep &lt;&lt; <span class="st">&quot;sizeof&quot;</span>  &lt;&lt; sep &lt;&lt; <span class="st">&quot;alignof&quot;</span> &lt;&lt; <span class="bu">std::</span>endl;</span>
-<span id="cb1-78"><a href="#cb1-78"></a>}</span></code></pre></div>
-<pre><code>--------------------------------------------------
-
-TYPE        | sizeof    | alignof
-  bool      | 1         | 1
-  char      | 1         | 1
-  short     | 2         | 2
-  int       | 4         | 4
-  float     | 4         | 4
-  double    | 8         | 8
-
-TYPE        | sizeof    | alignof
-  5S_bdb    | 24        | 8
-  5S_dbb    | 16        | 8
-  5S_b1d    | 16        | 8
-  5S_b8d    | 16        | 8
-  5S_b9d    | 24        | 8
---------------------------------------------------
-</code></pre>
-<p>TODO m_alignement.svg</p>
+<h3 id="results">Results:</h3>
+<p>For each effect, the codes and results are presented in the following pages:</p>
+<ul>
+<li><a href="alignement.html"><strong>Memory alignement and padding</strong></a>: For a CPU to work efficiently, there are restrictions on the addresses where objects of types are located in memory (<em>alignment</em>). In order to respect these alignements, the compiler sometimes needs to insterts extra bytes (<em>padding</em>) between the the members of user_defined types. This impact memory consumption…</li>
+</ul>
 <h2 id="impact-of-cache-lines">Impact of cache lines</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1"></a><span class="pp">#pragma once</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="pp">#include </span><span class="im">&lt;assert.h&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">namespace</span> cache</span>
-<span id="cb3-5"><a href="#cb3-5"></a>{</span>
-<span id="cb3-6"><a href="#cb3-6"></a>    <span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;</span>
-<span id="cb3-7"><a href="#cb3-7"></a>    <span class="dt">void</span> touche_every_step(</span>
-<span id="cb3-8"><a href="#cb3-8"></a>        <span class="bu">std::</span>vector&lt;T&gt;&amp; vecElem, </span>
-<span id="cb3-9"><a href="#cb3-9"></a>        <span class="bu">std::</span>size_t delta, </span>
-<span id="cb3-10"><a href="#cb3-10"></a>        <span class="bu">std::</span>size_t nb_touch)</span>
-<span id="cb3-11"><a href="#cb3-11"></a>    {  </span>
-<span id="cb3-12"><a href="#cb3-12"></a>        <span class="ot">assert</span>(nb_touch*delta &lt; vecElem.size());</span>
-<span id="cb3-13"><a href="#cb3-13"></a>        <span class="cf">for</span> (<span class="bu">std::</span>size_t i = <span class="dv">0</span>; i &lt; nb_touch; i++)</span>
-<span id="cb3-14"><a href="#cb3-14"></a>            vecElem[i * delta] += <span class="dv">1</span>;</span>
-<span id="cb3-15"><a href="#cb3-15"></a>    }</span>
-<span id="cb3-16"><a href="#cb3-16"></a>} <span class="co">// namespace cache</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1"></a><span class="pp">#pragma once</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="pp">#include </span><span class="im">&lt;assert.h&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">namespace</span> cache</span>
+<span id="cb1-5"><a href="#cb1-5"></a>{</span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;</span>
+<span id="cb1-7"><a href="#cb1-7"></a>    <span class="dt">void</span> touche_every_step(</span>
+<span id="cb1-8"><a href="#cb1-8"></a>        <span class="bu">std::</span>vector&lt;T&gt;&amp; vecElem, </span>
+<span id="cb1-9"><a href="#cb1-9"></a>        <span class="bu">std::</span>size_t delta, </span>
+<span id="cb1-10"><a href="#cb1-10"></a>        <span class="bu">std::</span>size_t nb_touch)</span>
+<span id="cb1-11"><a href="#cb1-11"></a>    {  </span>
+<span id="cb1-12"><a href="#cb1-12"></a>        <span class="ot">assert</span>(nb_touch*delta &lt; vecElem.size());</span>
+<span id="cb1-13"><a href="#cb1-13"></a>        <span class="cf">for</span> (<span class="bu">std::</span>size_t i = <span class="dv">0</span>; i &lt; nb_touch; i++)</span>
+<span id="cb1-14"><a href="#cb1-14"></a>            vecElem[i * delta] += <span class="dv">1</span>;</span>
+<span id="cb1-15"><a href="#cb1-15"></a>    }</span>
+<span id="cb1-16"><a href="#cb1-16"></a>} <span class="co">// namespace cache</span></span></code></pre></div>
 <figure>
 <img src="m_cache_lines.png" alt="" /><figcaption>The impact of cache lines on</figcaption>
 </figure>
 <h2 id="l1-l2-and-l3-caches">L1, L2 and L3 caches</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode txt"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1"></a>Architecture:          x86_64</span>
-<span id="cb4-2"><a href="#cb4-2"></a>CPU op-mode(s):        32-bit, 64-bit</span>
-<span id="cb4-3"><a href="#cb4-3"></a>Byte Order:            Little Endian</span>
-<span id="cb4-4"><a href="#cb4-4"></a>CPU(s):                4</span>
-<span id="cb4-5"><a href="#cb4-5"></a>On-line CPU(s) list:   0-3</span>
-<span id="cb4-6"><a href="#cb4-6"></a>Thread(s) per core:    2</span>
-<span id="cb4-7"><a href="#cb4-7"></a>Core(s) per socket:    2</span>
-<span id="cb4-8"><a href="#cb4-8"></a>NUMA node(s):          1</span>
-<span id="cb4-9"><a href="#cb4-9"></a>Vendor ID:             GenuineIntel</span>
-<span id="cb4-10"><a href="#cb4-10"></a>Model name:            Intel(R) Core(TM) i7-4510U CPU @ 2.00GHz</span>
-<span id="cb4-11"><a href="#cb4-11"></a>Stepping:              1</span>
-<span id="cb4-12"><a href="#cb4-12"></a>Virtualization:        VT-x</span>
-<span id="cb4-13"><a href="#cb4-13"></a>L1d cache:             32K</span>
-<span id="cb4-14"><a href="#cb4-14"></a>L1i cache:             32K</span>
-<span id="cb4-15"><a href="#cb4-15"></a>L2 cache:              256K</span>
-<span id="cb4-16"><a href="#cb4-16"></a>L3 cache:              4096K</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode txt"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1"></a>Architecture:          x86_64</span>
+<span id="cb2-2"><a href="#cb2-2"></a>CPU op-mode(s):        32-bit, 64-bit</span>
+<span id="cb2-3"><a href="#cb2-3"></a>Byte Order:            Little Endian</span>
+<span id="cb2-4"><a href="#cb2-4"></a>CPU(s):                4</span>
+<span id="cb2-5"><a href="#cb2-5"></a>On-line CPU(s) list:   0-3</span>
+<span id="cb2-6"><a href="#cb2-6"></a>Thread(s) per core:    2</span>
+<span id="cb2-7"><a href="#cb2-7"></a>Core(s) per socket:    2</span>
+<span id="cb2-8"><a href="#cb2-8"></a>NUMA node(s):          1</span>
+<span id="cb2-9"><a href="#cb2-9"></a>Vendor ID:             GenuineIntel</span>
+<span id="cb2-10"><a href="#cb2-10"></a>Model name:            Intel(R) Core(TM) i7-4510U CPU @ 2.00GHz</span>
+<span id="cb2-11"><a href="#cb2-11"></a>Stepping:              1</span>
+<span id="cb2-12"><a href="#cb2-12"></a>Virtualization:        VT-x</span>
+<span id="cb2-13"><a href="#cb2-13"></a>L1d cache:             32K</span>
+<span id="cb2-14"><a href="#cb2-14"></a>L1i cache:             32K</span>
+<span id="cb2-15"><a href="#cb2-15"></a>L2 cache:              256K</span>
+<span id="cb2-16"><a href="#cb2-16"></a>L3 cache:              4096K</span></code></pre></div>
 <h2 id="cache-associativity">Cache associativity</h2>
 <p><img src="m_cache_associativity.png" alt="The impact of cache lines on cache associativity" /> <img src="m_cache_associativity_zoom.png" alt="The impact of cache lines on cache associativity" /></p>
 </body>

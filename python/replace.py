@@ -13,8 +13,6 @@ def string_to_text_file(text, filepath):
 def main():
 	input_file  = sys.argv[1]
 	output_file = sys.argv[2]
-	input_file  = "docs/index.input.md"
-	output_file = "docs/index.md"
 
 	to_replace = re.findall(r"{{(.*)}}", text_file_as_string(input_file))
 	new_text = text_file_as_string(input_file)

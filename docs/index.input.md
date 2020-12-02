@@ -3,25 +3,18 @@ title: A gallery C++ of cache effects
 author: Gabriel Godefroy
 ---
 
-This repository is strongly inspired by:
+Hardware effects impact performances. This repository contains C++ codes illustrating some of these effects, as well as Python code to plot the results. You can fork this repository and try to reproduce the results, as these performance tests are hardware dependent.
+
+This repository, and all the contained examples, are strongly inspired by:
 
  * [“Gallery of Processor Cache Effects“, by Igor Ostrovsky](http://igoro.com/archive/gallery-of-processor-cache-effects/)
  * [“Want fast C++? Know your hardware!“, by Timur Doumler](https://www.youtube.com/watch?v=BP6NxVxDQIs)
 
-## On memory alignement  (padding)
+### Results:
 
-In C++, a variable can not be smaller that the size of a `char` 
+For each effect, the codes and results are presented in the following pages:
 
-```cpp
-{{src/m_alignement.cpp}}
-```
-
-```
-{{build/m_alignement.txt}}
-```
-
-TODO m_alignement.svg
-
+ * [__Memory alignement and padding__](alignement.html): For a CPU to work efficiently, there are restrictions on the addresses where objects of types are located in memory (_alignment_). In order to respect these alignements, the compiler sometimes needs to insterts extra bytes (_padding_) between the the members of user_defined types. This impact memory consumption...
 
 ## Impact of cache lines
 

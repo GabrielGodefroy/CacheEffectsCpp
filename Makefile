@@ -33,7 +33,7 @@ endef
 
 all: build_and_run_all webpage
 
-build_and_run_all: m_loop_vect m_false_sharing m_cache_associativity m_cache_lines  m_l1_l2 m_alignement 
+build_and_run_all: m_loop_vect m_false_sharing m_cache_associativity m_cache_lines  m_l1_l2 m_alignement m_padding
 
 
 .PHONY: clean
@@ -48,9 +48,16 @@ m_memory_vs_compute: build/m_memory_vs_compute.txt build/m_memory_vs_compute.exe
 
 build/m_alignement.txt: build/m_alignement.exe
 	$(call exec_file,m_alignement)
-build/m_alignement.exe: src/m_alignement.cpp 
+build/m_alignement.exe: src/m_alignement.cpp src/f_show_size_alignment.hpp
 	$(call compile_exe_file,m_alignement)
 m_alignement: build/m_alignement.txt build/m_alignement.exe
+
+build/m_padding.txt: build/m_padding.exe
+	$(call exec_file,m_padding)
+build/m_padding.exe: src/m_padding.cpp src/f_show_size_alignment.hpp
+	$(call compile_exe_file,m_padding)
+m_padding: build/m_padding.txt build/m_padding.exe
+
 
 build/m_l1_l2.txt: build/m_l1_l2.exe
 	$(call exec_file,m_l1_l2)
@@ -95,6 +102,8 @@ py: docs/m_cache_lines.png
  
 webpage:
 	$(call replace_and_pandoc,index)
+	$(call replace_and_pandoc,alignement)
+
 
     
         
