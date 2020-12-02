@@ -31,6 +31,12 @@ all: compil exec python webpage
 clean:
 	rm -rf build/*
 
+build/m_memory_vs_compute.txt: build/m_memory_vs_compute.exe
+	$(call exec_file,m_memory_vs_compute)
+build/m_memory_vs_compute.exe: src/m_memory_vs_compute.cpp 
+	$(call compile_exe_file,m_memory_vs_compute)
+m_memory_vs_compute: build/m_memory_vs_compute.txt build/m_memory_vs_compute.exe
+
 build/m_alignement.txt: build/m_alignement.exe
 	$(call exec_file,m_alignement)
 build/m_alignement.exe: src/m_alignement.cpp 
@@ -49,9 +55,9 @@ build/m_cache_lines.txt: build/m_cache_lines.exe
 	$(call exec_file,m_cache_lines)
 build/m_cache_lines.exe: src/m_cache_lines.cpp src/f_cache_lines.hpp 
 	$(call compile_exe_file,m_cache_lines)
-doc/m_cache_lines.png: python/m_cache_lines.py build/m_cache_lines.txt
+docs/m_cache_lines.png: python/m_cache_lines.py build/m_cache_lines.txt
 	$(call run_python,m_cache_lines)
-m_cache_lines: build/m_cache_lines.txt build/m_cache_lines.exe doc/m_cache_lines.png
+m_cache_lines: build/m_cache_lines.txt build/m_cache_lines.exe docs/m_cache_lines.png
 		
 build/m_cache_associativity.txt: build/m_cache_associativity.exe
 	$(call exec_file,m_cache_associativity)
@@ -76,11 +82,11 @@ m_loop_vect: build/m_loop_vect.txt build/m_loop_vect.exe
 		
 
 
-py: doc/m_cache_lines.png
+py: docs/m_cache_lines.png
 
 webpage:
 	$(call run_python,replace)
-	pandoc -c style.css -s doc/index.md -o doc/index.html
+	pandoc -c style.css -s docs/index.md -o docs/index.html
 
     
         
