@@ -1,35 +1,39 @@
 html {
-    background-color:#eee;
+  background-color: #eee;
 }
-body{
-	margin:0px auto;
-	max-width:850px;
-	line-height:1.6;
-	font-size:18px;
-    color:#444;
-    background-color: #ddd;
-    padding:60px 40px;
-    position: relative;
+body {
+  margin: 0px auto;
+  max-width: 850px;
+  line-height: 1.6;
+  font-size: 18px;
+  color: #444;
+  background-color: #ddd;
+  padding: 60px 40px;
+  position: relative;
 }
 
-h1,h2,h3{line-height:1.2}
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
 
 div.sourceCode {
-	font-size:13px;
-	line-height:1.0;
-	background-color: #fafafa;
-	padding: 10px;
+  font-size: 13px;
+  line-height: 1;
+  background-color: #fafafa;
+  padding: 10px;
 }
 
 figure {
-    width: 70%;
-    position: relative;
-    text-align: center;
-    font-style: italic;
-    border: thin silver solid;
-    margin: 0.5em;
-    padding: 0.5em;
-  }
-  img {
-    max-width: 100%;
-  }
+  width: 70%;
+  position: relative;
+  text-align: center;
+  font-style: italic;
+  border: thin silver solid;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+img {
+  max-width: 100%;
+}

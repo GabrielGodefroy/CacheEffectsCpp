@@ -24,10 +24,3 @@ For each effect, the codes and results are presented in the following pages:
 
   * [__L1, L2 and L3 caches__](l1_l2.html) TODO
   * [__Cache associativity__](cache_associativity.html) TODO
-
-
-
-## Cache associativity
-
-![The impact of cache lines on cache associativity](m_cache_associativity.png)
-![The impact of cache lines on cache associativity](m_cache_associativity_zoom.png)
