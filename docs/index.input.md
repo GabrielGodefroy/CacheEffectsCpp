@@ -3,7 +3,7 @@ title: A gallery C++ of cache effects
 author: Gabriel Godefroy
 ---
 
-Hardware effects impact performances. This repository contains C++ codes illustrating some of these effects, as well as Python code to plot the results. You can fork this repository and try to reproduce the results, as these performance tests are hardware dependent.
+Hardware effects impact performances. This repository contains C++ codes illustrating some of these effects, as well as Python code to plot the results. You can fork this repository and try to reproduce the results, as these performances tests are hardware dependent.
 
 This repository, and all the contained examples, are strongly inspired by:
 
@@ -12,7 +12,7 @@ This repository, and all the contained examples, are strongly inspired by:
 
  Remember, *Premature optimization is the root of all evil* (D.E. Knuth), so don't spend time trying to apply these tricks to your codebase without measurement. However, I find it interesting to _see_ how hardward architecture can impact performance.
 
- You can clone this repository and regenerate these experiments (and the web page) with your local machine. Feel free to provide correction, precision, and to contribute with new examples.
+ You can clone this repository and generate these experiments (and the web pages) with your local machine. Feel free to provide correction, precision, and to contribute with new examples.
 
 ### Results:
 
