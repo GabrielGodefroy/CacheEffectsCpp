@@ -10,42 +10,20 @@ This repository, and all the contained examples, are strongly inspired by:
  * [“Gallery of Processor Cache Effects“, by Igor Ostrovsky](http://igoro.com/archive/gallery-of-processor-cache-effects/)
  * [“Want fast C++? Know your hardware!“, by Timur Doumler](https://www.youtube.com/watch?v=BP6NxVxDQIs)
 
+ Remember, *Premature optimization is the root of all evil* (D.E. Knuth), so don't spend time trying to apply these tricks to your codebase without measurement. However, I find it interesting to _see_ how hardward architecture can impact performance.
+
+ You can clone this repository and regenerate these experiments (and the web page) with your local machine. Feel free to provide correction, precision, and to contribute with new examples.
+
 ### Results:
 
 For each effect, the codes and results are presented in the following pages:
 
  * [__Memory alignement and padding__](alignement.html): For a CPU to work efficiently, there are restrictions on the addresses where objects of types are located in memory (_alignment_). In order to respect these alignements, the compiler sometimes needs to insterts extra bytes (_padding_) between the the members of user_defined types. This impact memory consumption...
 
-## Impact of cache lines
+  * [__Impact of cache lines__](cache_lines.html): A cache is a smaller, faster memory, located closer to a processor core, which stores copies of the data from frequently used main memory locations. When loading data, the processor loads a whole cache line (_spatial locality_), and the data tends to remain in the cache for a few time (_temporal locality_). Accessing data that are already in a cache makes computations faster than reloading the data from the main memory.
 
-```cpp
-{{src/f_cache_lines.hpp}}
-```
-
-
-![The impact of cache lines on ](m_cache_lines.png)
-
-
-## L1, L2 and L3 caches
-
-```txt
-Architecture:          x86_64
-CPU op-mode(s):        32-bit, 64-bit
-Byte Order:            Little Endian
-CPU(s):                4
-On-line CPU(s) list:   0-3
-Thread(s) per core:    2
-Core(s) per socket:    2
-NUMA node(s):          1
-Vendor ID:             GenuineIntel
-Model name:            Intel(R) Core(TM) i7-4510U CPU @ 2.00GHz
-Stepping:              1
-Virtualization:        VT-x
-L1d cache:             32K
-L1i cache:             32K
-L2 cache:              256K
-L3 cache:              4096K
-```
+  * [__L1, L2 and L3 caches__](l1_l2.html) TODO
+  * [__Cache associativity__](cache_associativity.html) TODO
 
 
 

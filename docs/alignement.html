@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Gabriel Godefroy" />
   <title>Memory alignement and padding</title>
   <style>
     code{white-space: pre-wrap;}
@@ -84,11 +83,11 @@
 <body>
 <header id="title-block-header">
 <h1 class="title">Memory alignement and padding</h1>
-<p class="author">Gabriel Godefroy</p>
 </header>
 <p>For a CPU to work efficiently, there are restrictions on the addresses where objects of types are located in memory (<em>alignment</em>). In order to respect these alignements, the compiler sometimes needs to insterts extra bytes (<em>padding</em>) between the the members of user_defined types. This impact memory consumption…</p>
+<p>Computer stores information as bit (i.e., 0 or 1). Bit a not really used alone, but are packed by 8 to form bytes. A 64 bit-processor manipulates bytes 8 by 8.</p>
 <h2 id="memory-alignement">Memory alignement</h2>
-<p>In C++, a variable can not be smaller that the size of a word, i.e., of a <code>char</code></p>
+<p>In C++, a variable can not be smaller that the size of a word, i.e., of a <code>char</code>. A <code>bool</code> cannot be represent by a single bit. For a CPU to work efficiently, there are further restrictions on the addresses where objects of types are located in memory. The code below shows the sizes and the alignement for various standard types.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;map&gt;</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
@@ -117,8 +116,10 @@ TYPE        | sizeof    | alignof
   double    | 8         | 8
 --------------------------------------------------
 </code></pre>
+<p>On my architecture, <code>char</code> and <code>bool</code> are stored using 1 byte, and can be aligned everywhere. A <code>double</code> uses <code>8</code> bytes, and needs to be aligned on a 8th byte, as shown below</p>
 <p>TODO m_alignement.svg</p>
 <h2 id="padding">Padding</h2>
+<p>Alignement has implication when packing object into user-defined types.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="pp">#include </span><span class="im">&lt;typeinfo&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="pp">#include </span><span class="im">&lt;map&gt;</span></span>
@@ -126,29 +127,70 @@ TYPE        | sizeof    | alignof
 <span id="cb3-5"><a href="#cb3-5"></a></span>
 <span id="cb3-6"><a href="#cb3-6"></a><span class="pp">#include </span><span class="im">&quot;f_show_size_alignment.hpp&quot;</span><span class="pp"> </span><span class="co">//helper function</span></span>
 <span id="cb3-7"><a href="#cb3-7"></a></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">struct</span> S_dbb  { <span class="dt">double</span> b; <span class="dt">bool</span> a; <span class="dt">bool</span> c; };</span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="kw">struct</span> S_bdb  { <span class="dt">bool</span> a; <span class="dt">double</span> b; <span class="dt">bool</span> c; };</span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="kw">struct</span> S_b1d  { <span class="dt">bool</span> b1[<span class="dv">1</span>]; <span class="dt">double</span> b; };</span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="kw">struct</span> S_b8d  { <span class="dt">bool</span> b8[<span class="dv">8</span>]; <span class="dt">double</span> b; };</span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="kw">struct</span> S_b9d  { <span class="dt">bool</span> b9[<span class="dv">9</span>]; <span class="dt">double</span> b; };</span>
-<span id="cb3-13"><a href="#cb3-13"></a></span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="dt">int</span> main()</span>
-<span id="cb3-15"><a href="#cb3-15"></a>{</span>
-<span id="cb3-16"><a href="#cb3-16"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="bu">std::</span>string(<span class="dv">50</span>,<span class="ch">&#39;-&#39;</span>) &lt;&lt; <span class="bu">std::</span>endl;</span>
-<span id="cb3-17"><a href="#cb3-17"></a>    cache::show_table_header();</span>
-<span id="cb3-18"><a href="#cb3-18"></a>    cache::show_sizes_and_alignments&lt;S_bdb, S_dbb, S_b1d, S_b8d, S_b9d&gt;();    </span>
-<span id="cb3-19"><a href="#cb3-19"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="bu">std::</span>string(<span class="dv">50</span>,<span class="ch">&#39;-&#39;</span>)&lt;&lt; <span class="bu">std::</span>endl;</span>
-<span id="cb3-20"><a href="#cb3-20"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
-<span id="cb3-21"><a href="#cb3-21"></a>}</span></code></pre></div>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">struct</span> Svoid  { };</span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="kw">struct</span> Smeth  { <span class="dt">bool</span> mymethod(){<span class="cf">return</span> <span class="kw">true</span>;}; <span class="at">static</span> <span class="dt">void</span> static_meth(){<span class="cf">return</span>;} };</span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="kw">struct</span> S_d  { <span class="dt">double</span> b; };</span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="kw">struct</span> S_b  { <span class="dt">char</span> b; };</span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="kw">struct</span> S_dcc  { <span class="dt">double</span> b; <span class="dt">char</span> a; <span class="dt">char</span> c; };</span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="kw">struct</span> S_cdc  { <span class="dt">char</span> a; <span class="dt">double</span> b; <span class="dt">char</span> c; };</span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="kw">struct</span> S_c1c  { <span class="dt">char</span> b1[<span class="dv">1</span>]; <span class="dt">char</span> b; };</span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="kw">struct</span> S_c8c  { <span class="dt">char</span> b8[<span class="dv">8</span>]; <span class="dt">char</span> b; };</span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="kw">struct</span> S_c9c  { <span class="dt">char</span> b9[<span class="dv">9</span>]; <span class="dt">char</span> b; };</span>
+<span id="cb3-17"><a href="#cb3-17"></a></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="dt">int</span> main()</span>
+<span id="cb3-19"><a href="#cb3-19"></a>{</span>
+<span id="cb3-20"><a href="#cb3-20"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="bu">std::</span>string(<span class="dv">50</span>,<span class="ch">&#39;-&#39;</span>) &lt;&lt; <span class="bu">std::</span>endl;</span>
+<span id="cb3-21"><a href="#cb3-21"></a>    cache::show_table_header();</span>
+<span id="cb3-22"><a href="#cb3-22"></a>    cache::show_sizes_and_alignments&lt;Smeth, Svoid, Svoid[<span class="dv">2</span>],S_d, S_b, S_cdc, S_dcc, S_c1c, S_c8c, S_c9c&gt;();    </span>
+<span id="cb3-23"><a href="#cb3-23"></a>    <span class="bu">std::</span>cout &lt;&lt; <span class="bu">std::</span>string(<span class="dv">50</span>,<span class="ch">&#39;-&#39;</span>)&lt;&lt; <span class="bu">std::</span>endl;</span>
+<span id="cb3-24"><a href="#cb3-24"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb3-25"><a href="#cb3-25"></a>}</span></code></pre></div>
 <pre><code>--------------------------------------------------
 
 TYPE        | sizeof    | alignof
-  5S_bdb    | 24        | 8
-  5S_dbb    | 16        | 8
-  5S_b1d    | 16        | 8
-  5S_b8d    | 16        | 8
-  5S_b9d    | 24        | 8
+  5Smeth    | 1         | 1
+  5Svoid    | 1         | 1
+  A2_5Svoid | 2         | 1
+  3S_d      | 8         | 8
+  3S_b      | 1         | 1
+  5S_cdc    | 24        | 8
+  5S_dcc    | 16        | 8
+  5S_c1c    | 2         | 1
+  5S_c8c    | 9         | 1
+  5S_c9c    | 10        | 1
 --------------------------------------------------
 </code></pre>
+<p>We can observed that storing an empty type takes 1 byte. Storing a built-in type has no space overhead. However, when mixing types when can observe that the size of a user-defined type is not necessarily the size of the sum of the contained types. For example, <code>S_cdc</code> and <code>S_dcc</code> both contain 1 <code>double</code> and 2 <code>char</code>.</p>
+<ul>
+<li><code>size(S_cdc)==24</code> and</li>
+<li><code>size(S_dcc)==16</code></li>
+<li>while <code>size(double)+2*size(char)==8+2*1==10</code>).</li>
+</ul>
+<p>This is due to the alignement of <code>double</code>, which is 8. In the case of <code>S_cdc</code>, after the first char, 7 unused bytes while be added to respect the padding of the double. Same thing after the second char, to respect the padding of the object itself:</p>
+<p>||c<strong>eeeeeee</strong>||dddddddd||c<strong>eeeeeeee</strong>|| (|| are 8-bytes separators and <em>e</em> and empty byte added for padding)</p>
+<p>In the case of <code>S_dcc</code>, on 6 empty bytes are needed, saving 8 bytes:</p>
+<p>||dddddddd||cc<strong>eeeeeee</strong>|</p>
+<h2 id="to-remember">To remember</h2>
+<ul>
+<li>the size of user defined type is NOT the necessaily equal to the sum of the sizes of its components.</li>
+<li>by re-arranging the order in which members are defined, we can reduce the amount of memory consumed by one object.</li>
+<li>a rule of thumb to reduce object size is to define large members first, and to leave small ones at the end of the class.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">———————————</th>
+<th style="text-align: center;">———————————</th>
+<th style="text-align: right;">———————————</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><a href="todo.html">Prev page</a></td>
+<td style="text-align: center;"><a href="index.html">Main page</a></td>
+<td style="text-align: right;"><a href="todo.html">Next page</a></td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

@@ -2,9 +2,11 @@
 
 namespace cache
 {
-    void touch_every(int *array, int size_array, int nb_touch)
+    bool touch_every(int *array, int size_array, int nb_touch, int step)
     {
-        for (int i = 0; i < nb_touch; i++)
-            array[(i * 32) & (size_array-1)]++;
+        const int lengthMod = (size_array-1);
+        for (int touch = 0; touch < nb_touch; touch++)
+            array[(touch * step) & lengthMod]++;
+        return true;
     }
 } 
