@@ -27,6 +27,10 @@ def main():
 
     df = build_data_set(content)
 
+    sns.set_style("dark")
+    sns.set_context("talk")
+    plt.figure(figsize=(9,4))
+
     sns.lineplot(data=df, x="step", y="Run time (ms)",hue="Value type",ci=None,linewidth=1.0)
 
     plt.axvline(16, color="red",linewidth=0.8)
@@ -47,7 +51,7 @@ def main():
     )
     plt.xlim([-0.5, df['step'].max()])
     # plt.ylim([0,16])
-    plt.savefig(output_img, dpi=400)
+    plt.savefig(output_img, dpi=90)
 
 
 main()

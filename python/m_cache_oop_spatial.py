@@ -24,15 +24,19 @@ def main():
     with open(input_file, "r") as result:
         content = result.read()
 
-    df = build_data_set(content)
-    #print(df)
-
+    plt.figure(figsize=(8,4))
     sns.set_style("dark")
     sns.set_context("talk")
 
+    df = build_data_set(content)
+    #print(df)
+
+
+    
+
     sns.displot(df, x="Run time (ms)", hue="Implementation",bins=30)#, kind="kde")
     #plt.show()
-    plt.savefig(output_img, dpi=400)
+    plt.savefig(output_img, dpi=145)
 
 
 main()

@@ -101,8 +101,23 @@
 <span id="cb1-14"><a href="#cb1-14"></a>L1i cache:             32K</span>
 <span id="cb1-15"><a href="#cb1-15"></a>L2 cache:              256K</span>
 <span id="cb1-16"><a href="#cb1-16"></a>L3 cache:              4096K</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1"></a><span class="pp">#include </span><span class="im">&quot;f_l1_l2.h&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">namespace</span> cache</span>
+<span id="cb2-4"><a href="#cb2-4"></a>{</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="dt">void</span> touch_every(<span class="dt">int</span> *array, <span class="dt">int</span> size_array, <span class="dt">int</span> nb_touch, <span class="dt">int</span> step)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    {</span>
+<span id="cb2-7"><a href="#cb2-7"></a>        <span class="at">const</span> <span class="dt">int</span> lengthMod = (size_array-<span class="dv">1</span>);</span>
+<span id="cb2-8"><a href="#cb2-8"></a>        <span class="cf">for</span> (<span class="dt">int</span> touch = <span class="dv">0</span>; touch &lt; nb_touch; touch++)</span>
+<span id="cb2-9"><a href="#cb2-9"></a>            array[(touch * step) &amp; lengthMod]++;</span>
+<span id="cb2-10"><a href="#cb2-10"></a>    }</span>
+<span id="cb2-11"><a href="#cb2-11"></a>} </span></code></pre></div>
 <figure>
 <img src="m_l1_l2.png" alt="" /><figcaption>Impact of cache size on performance</figcaption>
+</figure>
+<h1 id="todo">TODO</h1>
+<figure>
+<img src="m_l1_l2_detail.png" alt="" /><figcaption>Impact of cache size on performance</figcaption>
 </figure>
 <table>
 <thead>
@@ -114,9 +129,9 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><a href="todo.html">Prev page</a></td>
+<td style="text-align: left;"><a href="cache_lines.html">Prev page</a></td>
 <td style="text-align: center;"><a href="index.html">Main page</a></td>
-<td style="text-align: right;"><a href="todo.html">Next page</a></td>
+<td style="text-align: right;"><a href="cache_associativity.html">Next page</a></td>
 </tr>
 </tbody>
 </table>

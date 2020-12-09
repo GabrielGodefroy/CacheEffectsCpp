@@ -33,7 +33,7 @@ endef
 
 all: build_and_run_all webpage
 
-build_and_run_all: m_loop_vect m_false_sharing m_cache_associativity m_cache_lines m_cache_list_vs_vec m_cache_oop_spatial m_cache_oop_temporal m_l1_l2 m_alignement m_padding 
+build_and_run_all: m_loop_vect m_false_sharing m_cache_associativity m_cache_lines m_cache_list_vs_vec m_cache_oop_spatial m_cache_oop_temporal m_l1_l2 m_l1_l2_detail m_alignement m_padding 
 
 
 .PHONY: clean
@@ -68,6 +68,15 @@ build/m_l1_l2.exe: build/f_l1_l2.o src/m_l1_l2.cpp src/DoNotOptimize.hpp
 docs/m_l1_l2.png: python/m_l1_l2.py build/m_l1_l2.txt
 	$(call run_python,m_l1_l2)
 m_l1_l2: build/m_l1_l2.txt build/m_l1_l2.exe docs/m_l1_l2.png
+
+build/m_l1_l2_detail.txt: build/m_l1_l2_detail.exe
+	$(call exec_file,m_l1_l2_detail)
+build/m_l1_l2_detail.exe: build/f_l1_l2.o src/m_l1_l2_detail.cpp src/DoNotOptimize.hpp
+	$(call compile_exe_file,m_l1_l2_detail, -I/src build/f_l1_l2.o)
+docs/m_l1_l2_detail.png: python/m_l1_l2_detail.py build/m_l1_l2_detail.txt
+	$(call run_python,m_l1_l2_detail)
+m_l1_l2_detail: build/m_l1_l2_detail.txt build/m_l1_l2_detail.exe docs/m_l1_l2_detail.png
+	
 	
 build/m_cache_lines.txt: build/m_cache_lines.exe
 	$(call exec_file,m_cache_lines)

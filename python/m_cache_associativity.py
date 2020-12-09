@@ -10,6 +10,7 @@ def load_file_as_dataframe(input_file):
     df = build_data_set_from_text(content)
     return df
 
+
 def build_data_set_from_text(content):
     df = pd.DataFrame()
     values = re.findall(r"([0-9]+)\s+(.+)", content)
@@ -20,33 +21,43 @@ def build_data_set_from_text(content):
     df["Run time (ms)"] = time
     return df
 
+
 def main():
     input_file = "build/m_cache_associativity.txt"
     output_png = "docs/m_cache_associativity.png"
 
+    plt.figure(figsize=(15,7))
+
     sns.set_style("dark")
     sns.set_context("talk")
 
-    plt.axvline(128, color="lightgreen", linewidth=3)
-    plt.axvline(256, color="lightgreen", linewidth=3)
-    plt.axvline(512, color="lightgreen", linewidth=3)
-    #plt.axvline(256000, color="orange", linewidth=3)
-    #plt.axvline(4000000, color="lightblue", linewidth=3)
+   
+    # plt.axvline(256000, color="orange", linewidth=3)
+    # plt.axvline(4000000, color="lightblue", linewidth=3)
 
     df = load_file_as_dataframe(input_file)
-    sns.scatterplot(data=df, x="step", y="Run time (ms)", alpha=0.1)
-    df = df.groupby("step").mean()
-    sns.lineplot(data=df, x="step", y="Run time (ms)")
+    sns.scatterplot(data=df, x="step", y="Run time (ms)", alpha=0.2, s=20, color="lightblue")
 
-    #plt.xscale("log")
-    #plt.xticks(
-    #    [1000, 32000, 256000, 4000000, 256000000],
-    #    ["1k", "32k", "256k", "4M", "256M"])
-    plt.ylim([0, 1.15 * df["Run time (ms)"].max()])
-    #plt.set_ylim([32,64])
+
+    df = df.groupby("step").mean()
+    sns.scatterplot(data=df, x="step", y="Run time (ms)", alpha=0.8, s=80, color="darkblue")
+
+    peculiar_values_label = ["128*"+str(i) for i in range (1, 16)]
+    peculiar_values = [eval(i) for i in peculiar_values_label]
+    for v_ind,v in enumerate(peculiar_values):
+        plt.axvline(v, color="darkgrey", linewidth=1)
+        plt.text(1.01*v,0.05*df["Run time (ms)"].max(),peculiar_values_label[v_ind],rotation=90)
+
+    plt.xscale("log")
+    plt.xticks(
+        [pow(2,i) for i in range(7,12)],[pow(2,i) for i in range(7,12)]
+    )
+    plt.xlim([200,2200])
+    plt.ylim([0, 1.1 * df["Run time (ms)"].max()])
     plt.tight_layout()
-    plt.savefig(output_png, dpi=400)
+    plt.savefig(output_png, dpi=90)
     plt.show()
+
 
 if __name__ == "__main__":
     main()

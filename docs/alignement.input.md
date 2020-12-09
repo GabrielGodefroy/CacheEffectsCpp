@@ -60,4 +60,4 @@ We can observed that storing an empty type takes 1 byte. Storing a built-in type
 
  | --------------------------------- | --------------------------------- | --------------------------------- |
 |:--|:--:|--:|
-| [Prev page](todo.html) | [Main page](index.html) | [Next page](todo.html) |
+|  | [Main page](index.html) | [Next page](cache_lines.html) |
